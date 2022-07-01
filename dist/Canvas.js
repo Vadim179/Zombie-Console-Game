@@ -3,15 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Canvas = void 0;
 const Colors_1 = require("./Colors");
 class Canvas {
-    color;
     width;
     height;
+    color;
     colorMatrix = [];
     objects = [];
-    constructor({ width, height }, color = '#071A52') {
-        this.color = color;
+    constructor(width, height, color = '#071A52') {
         this.width = width;
         this.height = height;
+        this.color = color;
         this.create();
     }
     insertObject(object) {
@@ -24,7 +24,10 @@ class Canvas {
         for (let x = 0; x < this.height; x++) {
             colorMatrix.push([]);
             for (let y = 0; y < this.width; y++) {
-                colorMatrix[x].push(this.color);
+                const color = typeof this.color === 'function'
+                    ? this.color(x, y)
+                    : this.color;
+                colorMatrix[x].push(color);
             }
         }
         this.colorMatrix = colorMatrix;

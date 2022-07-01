@@ -1,20 +1,17 @@
-import { IGameObject, ISize, Color } from './types'
+import { IGameObject, Color } from './types'
 import { Colors } from './Colors'
 
 export class Canvas {
-  width: number
-  height: number
-
   colorMatrix: string[][] = []
   objects: IGameObject[] = []
 
   constructor(
-    { width, height }: ISize,
-    private readonly color: Color = '#071A52'
+    public readonly width: number,
+    public readonly height: number,
+    private readonly color:
+      | Color
+      | ((x: number, y: number) => Color) = '#071A52'
   ) {
-    this.width = width
-    this.height = height
-
     this.create()
   }
 
@@ -30,7 +27,11 @@ export class Canvas {
     for (let x = 0; x < this.height; x++) {
       colorMatrix.push([])
       for (let y = 0; y < this.width; y++) {
-        colorMatrix[x].push(this.color)
+        const color =
+          typeof this.color === 'function'
+            ? this.color(x, y)
+            : this.color
+        colorMatrix[x].push(color)
       }
     }
 

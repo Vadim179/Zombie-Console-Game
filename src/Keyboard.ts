@@ -11,7 +11,7 @@ const specialKeys: IKeyboardSpecialKeys = {
   escape: () => process.exit(),
 }
 
-export class Keyboard {
+class Keyboard {
   public onKeyPress(callback: (keyName: string) => void) {
     process.stdin.on('keypress', (_, key) => {
       if (key.name in specialKeys)
@@ -20,3 +20,5 @@ export class Keyboard {
     })
   }
 }
+
+export const keyboard = new Keyboard()

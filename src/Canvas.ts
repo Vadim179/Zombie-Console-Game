@@ -1,33 +1,40 @@
-import { IGameObject, ISize, Sprite } from './types'
+import { IGameObject, ISize, Color } from './types'
+import { Colors } from './Colors'
 
 export class Canvas {
-  content: string[][] = []
+  width: number
+  height: number
+
+  colorMatrix: string[][] = []
   objects: IGameObject[] = []
 
   constructor(
-    private readonly size: ISize,
-    private readonly sprite: Sprite = '⬛'
+    { width, height }: ISize,
+    private readonly color: Color = '#071A52'
   ) {
+    this.width = width
+    this.height = height
+
     this.create()
   }
 
-  public addObject(object: IGameObject) {
-    object.setBoundries(this.size.width, this.size.height)
+  public insertObject(object: IGameObject) {
+    object.setBoundries(this.width, this.height)
     this.objects.push(object)
     return this
   }
 
   private create() {
-    const content: string[][] = []
+    const colorMatrix: string[][] = []
 
-    for (let x = 0; x < this.size.height; x++) {
-      content.push([])
-      for (let y = 0; y < this.size.width; y++) {
-        content[x].push(this.sprite)
+    for (let x = 0; x < this.height; x++) {
+      colorMatrix.push([])
+      for (let y = 0; y < this.width; y++) {
+        colorMatrix[x].push(this.color)
       }
     }
 
-    this.content = content
+    this.colorMatrix = colorMatrix
   }
 
   public render(frameRate: number = 30) {
@@ -36,25 +43,21 @@ export class Canvas {
       console.clear()
 
       for (const object of this.objects) {
-        for (
-          let y = object.position.y;
-          y < object.position.y + object.size.height;
-          y++
-        ) {
-          for (
-            let x = object.position.x;
-            x < object.position.x + object.size.width;
-            x++
-          ) {
-            this.content[y][x] = object.sprite
+        for (let y = object.top; y < object.bottom; y++) {
+          for (let x = object.left; x < object.right; x++) {
+            this.colorMatrix[y][x] = object.color
           }
         }
       }
 
-      for (let x = 0; x < this.content.length; x++) {
+      for (let x = 0; x < this.colorMatrix.length; x++) {
         let row = ''
-        for (let y = 0; y < this.content[x].length; y++) {
-          row += this.content[x][y]
+        for (
+          let y = 0;
+          y < this.colorMatrix[x].length;
+          y++
+        ) {
+          row += Colors.hex(this.colorMatrix[x][y])('██')
         }
         console.log(row)
       }

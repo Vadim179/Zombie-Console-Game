@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Keyboard = void 0;
+exports.keyboard = void 0;
 const readline_1 = __importDefault(require("readline"));
 readline_1.default.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
@@ -21,5 +21,5 @@ class Keyboard {
         });
     }
 }
-exports.Keyboard = Keyboard;
+exports.keyboard = new Keyboard();
 //# sourceMappingURL=Keyboard.js.map

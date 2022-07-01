@@ -2,50 +2,48 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GameObject = void 0;
 class GameObject {
-    constructor() {
-        this.sprite = '';
-        this.position = {
-            x: 0,
-            y: 0,
-        };
-        this.boundries = {
-            x: 0,
-            y: 0,
-        };
-        this.size = {
-            width: 1,
-            height: 1,
-        };
+    color = '#ffffff';
+    left = 0;
+    top = 0;
+    width = 0;
+    height = 0;
+    leftBoundry = 0;
+    topBoundry = 0;
+    get right() {
+        return this.left + this.width;
     }
-    setSprite(sprite) {
-        this.sprite = sprite;
+    get bottom() {
+        return this.top + this.height;
+    }
+    setColor(color) {
+        this.color = color;
         return this;
     }
-    setX(x) {
-        if (this.boundries.x === 0 ||
-            (x >= 0 && x + this.size.width <= this.boundries.x)) {
-            this.position.x = x;
+    setLeft(left) {
+        if (this.leftBoundry === 0 ||
+            (left >= 0 && left + this.width <= this.leftBoundry)) {
+            this.left = left;
         }
         return this;
     }
-    setY(y) {
-        if (this.boundries.y === 0 ||
-            (y >= 0 && y + this.size.height <= this.boundries.y)) {
-            this.position.y = y;
+    setTop(top) {
+        if (this.topBoundry === 0 ||
+            (top >= 0 && top + this.height <= this.topBoundry)) {
+            this.top = top;
         }
         return this;
     }
-    setPosition(x, y) {
-        this.setX(x);
-        this.setY(y);
+    setPosition(left, top) {
+        this.setLeft(left);
+        this.setTop(top);
         return this;
     }
     setWidth(width) {
-        this.size.width = width;
+        this.width = width;
         return this;
     }
     setHeight(height) {
-        this.size.height = height;
+        this.height = height;
         return this;
     }
     setSize(width, height) {
@@ -53,9 +51,32 @@ class GameObject {
         this.setHeight(height);
         return this;
     }
-    setBoundries(x, y) {
-        this.boundries.x = x;
-        this.boundries.y = y;
+    setBoundries(left, top) {
+        this.leftBoundry = left;
+        this.topBoundry = top;
+        return this;
+    }
+    follow(target, speed = 5) {
+        setInterval(() => {
+            const IS_X_PRIORITY = Math.abs(this.left - target.left) >
+                Math.abs(this.top - target.top);
+            if (IS_X_PRIORITY) {
+                if (target.left + 1 < this.left) {
+                    this.setLeft(this.left - 1);
+                }
+                else if (target.left - 1 > this.left) {
+                    this.setLeft(this.left + 1);
+                }
+            }
+            else {
+                if (target.top + 1 < this.top) {
+                    this.setTop(this.top - 1);
+                }
+                else if (target.top - 1 > this.top) {
+                    this.setTop(this.top + 1);
+                }
+            }
+        }, 1000 / speed);
         return this;
     }
 }

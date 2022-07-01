@@ -1,68 +1,64 @@
-import {
-  ISize,
-  IPosition,
-  Sprite,
-  IGameObject,
-} from './types'
+import { Color, IGameObject } from './types'
 
 export class GameObject implements IGameObject {
-  sprite: Sprite = ''
+  color: Color = '#ffffff'
 
-  position: IPosition = {
-    x: 0,
-    y: 0,
+  left = 0
+  top = 0
+  width = 0
+  height = 0
+
+  private leftBoundry = 0
+  private topBoundry = 0
+
+  get right() {
+    return this.left + this.width
   }
 
-  boundries: IPosition = {
-    x: 0,
-    y: 0,
+  get bottom() {
+    return this.top + this.height
   }
 
-  size: ISize = {
-    width: 1,
-    height: 1,
-  }
-
-  setSprite(sprite: Sprite) {
-    this.sprite = sprite
+  setColor(color: Color) {
+    this.color = color
     return this
   }
 
-  setX(x: number) {
+  setLeft(left: number) {
     if (
-      this.boundries.x === 0 ||
-      (x >= 0 && x + this.size.width <= this.boundries.x)
+      this.leftBoundry === 0 ||
+      (left >= 0 && left + this.width <= this.leftBoundry)
     ) {
-      this.position.x = x
+      this.left = left
     }
 
     return this
   }
 
-  setY(y: number) {
+  setTop(top: number) {
     if (
-      this.boundries.y === 0 ||
-      (y >= 0 && y + this.size.height <= this.boundries.y)
+      this.topBoundry === 0 ||
+      (top >= 0 && top + this.height <= this.topBoundry)
     ) {
-      this.position.y = y
+      this.top = top
     }
 
     return this
   }
 
-  setPosition(x: number, y: number) {
-    this.setX(x)
-    this.setY(y)
+  setPosition(left: number, top: number) {
+    this.setLeft(left)
+    this.setTop(top)
     return this
   }
 
   setWidth(width: number) {
-    this.size.width = width
+    this.width = width
     return this
   }
 
   setHeight(height: number) {
-    this.size.height = height
+    this.height = height
     return this
   }
 
@@ -72,9 +68,36 @@ export class GameObject implements IGameObject {
     return this
   }
 
-  setBoundries(x: number, y: number) {
-    this.boundries.x = x
-    this.boundries.y = y
+  setBoundries(left: number, top: number) {
+    this.leftBoundry = left
+    this.topBoundry = top
+    return this
+  }
+
+  /**
+   * @param target Object to follow
+   * @param speed Tiles per second
+   */
+  follow(target: IGameObject, speed = 5) {
+    setInterval(() => {
+      const IS_X_PRIORITY =
+        Math.abs(this.left - target.left) >
+        Math.abs(this.top - target.top)
+
+      if (IS_X_PRIORITY) {
+        if (target.left + 1 < this.left) {
+          this.setLeft(this.left - 1)
+        } else if (target.left - 1 > this.left) {
+          this.setLeft(this.left + 1)
+        }
+      } else {
+        if (target.top + 1 < this.top) {
+          this.setTop(this.top - 1)
+        } else if (target.top - 1 > this.top) {
+          this.setTop(this.top + 1)
+        }
+      }
+    }, 1000 / speed)
     return this
   }
 }

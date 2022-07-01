@@ -10,7 +10,12 @@ export class Canvas {
     public readonly height: number,
     private readonly color:
       | Color
-      | ((x: number, y: number) => Color) = '#071A52'
+      | ((
+          x: number,
+          y: number,
+          width: number,
+          height: number
+        ) => Color) = '#071A52'
   ) {
     this.create()
   }
@@ -29,7 +34,7 @@ export class Canvas {
       for (let y = 0; y < this.width; y++) {
         const color =
           typeof this.color === 'function'
-            ? this.color(x, y)
+            ? this.color(x, y, this.width, this.height)
             : this.color
         colorMatrix[x].push(color)
       }

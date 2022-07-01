@@ -25,7 +25,7 @@ class Canvas {
             colorMatrix.push([]);
             for (let y = 0; y < this.width; y++) {
                 const color = typeof this.color === 'function'
-                    ? this.color(x, y)
+                    ? this.color(x, y, this.width, this.height)
                     : this.color;
                 colorMatrix[x].push(color);
             }
